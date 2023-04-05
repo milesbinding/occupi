@@ -1,12 +1,14 @@
-import bluetooth
-from datetime import datetime
-import mysql.connector
-import hashlib
-import secrets
 import configparser
-import math
-import time
 import os
+import platform
+import time
+from datetime import datetime
+
+import bluetooth
+import mysql.connector
+
+# Define time interval to check for device presence
+INTERVAL = 5 * 60  # 5 minutes in seconds
 
 # Constants for Friis transmission equation
 freq = 2400  # MHz
@@ -19,7 +21,8 @@ config = configparser.ConfigParser()
 if os.path.isfile('config.ini'):
     config.read('config.ini')
 else:
-    config['MYSQL'] = {'host': 'localhost', 'user': 'root', 'password': 'password', 'database': 'database', 'port': '3306'}
+    config['MYSQL'] = {'host': 'localhost', 'user': 'root', 'password': 'password', 'database': 'database',
+                       'port': '3306'}
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
 
@@ -43,54 +46,76 @@ mydb = mysql.connector.connect(
 cursor = mydb.cursor()
 cursor.execute("CREATE DATABASE IF NOT EXISTS bindingm")
 cursor.execute("USE bindingm")
-cursor.execute("CREATE TABLE IF NOT EXISTS occupancy (id INT AUTO_INCREMENT PRIMARY KEY, encrypted_mac VARCHAR(255) UNIQUE, salt VARCHAR(255), time_stamp DATETIME, distance VARCHAR(255))")
-
+cursor.execute(
+    "CREATE TABLE IF NOT EXISTS occupancy (id INT AUTO_INCREMENT PRIMARY KEY, mac VARCHAR(255) UNIQUE, time_stamp DATETIME, distance VARCHAR(255), counter INT)")
+print("Creating occupancy table.")
 # Bluetooth device detection
 while True:
     nearby_devices = bluetooth.discover_devices()
-
-    for bdaddr in nearby_devices:
+    print("Discovering devices...")
+    for bAddr in nearby_devices:
         # Get current timestamp
         now = datetime.now()
         current_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
         # Get RSSI value and calculate distance using Friis transmission equation
-        rssi = -50 #placeholder
+        # Replace <device_address> with the Bluetooth address of the device you want to read the RSSI value from.
+        address = bAddr
+
+        # Check the operating system and use the appropriate method to retrieve the RSSI value.
+        if platform.system() == 'Windows':
+            raise NotImplementedError("The PyBluez library is not compatible with Windows.")
+            continue
+        else:
+            # Use the lookup_name and read_rssi functions to retrieve the RSSI value.
+            name = bluetooth.lookup_name(address, timeout=5)
+            rssi = bluetooth.read_rssi(address)
+            print(f"Device name: {name}")
+            print(f"RSSI value: {rssi} dBm")
+
         rssi_dbm = float(rssi)
         distance = 10 ** ((tx_power - rssi_dbm - rssi_0) / (10 * n))
 
-        # Generate salt
-        salt = secrets.token_hex(16)
-
-        # Encrypt MAC address with salt
-        encrypted_mac = hashlib.sha256((bdaddr + salt).encode()).hexdigest()
-
-        # Insert encrypted MAC address, salt, timestamp, and distance into MySQL database using parameterized query
-        cursor = mydb.cursor()
-        query = "INSERT INTO occupancy (encrypted_mac, salt, time_stamp, distance) VALUES (%s, %s, %s, %s)"
-        values = (encrypted_mac, salt, current_time, distance)
+        # Check if device already exists in the database
+        query = "SELECT mac FROM occupancy WHERE mac = %s"
+        values = (bAddr,)
         cursor.execute(query, values)
-        mydb.commit()
+        result = cursor.fetchone()
 
-        print("Device detected: ", bdaddr, "Distance:", distance, "meters")
+        if result is None:
+            # Insert MAC address, timestamp, and distance into MySQL database using parameterized query
+            query = "INSERT INTO occupancy (mac, time_stamp, distance, counter) VALUES (%s, %s, %s, %s)"
+            values = (bAddr, current_time, distance, 0)
+            cursor.execute(query, values)
+            mydb.commit()
+            print("Device added: ", bAddr, "Distance:", distance, "meters")
+        else:
+            print("Device ", bAddr, "is already in the database!")
 
     # Check database for devices that have not been seen for 5 minutes and remove them
     cursor = mydb.cursor()
-    query = "SELECT encrypted_mac, time_stamp FROM occupancy"
+    query = "SELECT mac, time_stamp, counter FROM occupancy"
     cursor.execute(query)
     results = cursor.fetchall()
     for result in results:
         mac = result[0]
         last_seen = result[1]
         last_seen_time = datetime.strptime(str(last_seen), "%Y-%m-%d %H:%M:%S")
-        elapsed_time = datetime.now() - last_seen_time
-        if elapsed_time.total_seconds() > 300:
-            query = "DELETE FROM occupancy WHERE encrypted_mac = %s"
+        counter = result[2]
+        elapsed_time = now - last_seen_time
+        if elapsed_time.total_seconds() > INTERVAL:
+            query = "DELETE FROM occupancy WHERE mac = %s"
             values = (mac,)
             cursor.execute(query, values)
             mydb.commit()
             print("Device removed: ", mac)
+        else:
+            counter += 1
+            query = "UPDATE occupancy SET counter = %s WHERE mac = %s"
+            values = (counter, mac)
+            cursor.execute(query, values)
+            mydb.commit()
+            print("Device counter updated: ", mac, counter)
 
     time.sleep(10)
-
-mydb.close()
+    print("Sleeping!")
