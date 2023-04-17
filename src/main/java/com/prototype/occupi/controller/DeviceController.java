@@ -5,19 +5,22 @@ package com.prototype.occupi.controller;
 
 import com.prototype.occupi.model.Device;
 import com.prototype.occupi.service.DeviceService;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
-// Importing required classes
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 // Annotation
 @RestController
 // Class
 public class DeviceController {
 
-    @Autowired private DeviceService deviceService;
+    private final DeviceService deviceService;
+
+    public DeviceController(DeviceService deviceService) {
+        this.deviceService = deviceService;
+    }
 
     // Save operation
     @PostMapping("/devices")
@@ -38,26 +41,26 @@ public class DeviceController {
 
     @GetMapping("/devices/{id}")
     public Optional<Device> getDeviceById(@PathVariable("id")
-                                Long deviceId) {return deviceService.getDeviceById(deviceId);}
+                                              int id) {return deviceService.getDeviceById(id);}
     // Update operation
     @PutMapping("/devices/{id}")
 
     public Device
     updateDevice(@RequestBody Device device,
-                     @PathVariable("id") Long deviceId)
+                     @PathVariable("id") int id)
     {
         return deviceService.updateDevice(
-                device, deviceId);
+                device, id);
     }
 
     // Delete operation
     @DeleteMapping("/devices/{id}")
 
     public String deleteDeviceById(@PathVariable("id")
-                                       Long deviceId)
+                                       int id)
     {
         deviceService.deleteDeviceById(
-                deviceId);
+                id);
         return "Deleted Successfully";
     }
 }

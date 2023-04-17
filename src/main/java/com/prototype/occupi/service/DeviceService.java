@@ -14,12 +14,12 @@ public interface DeviceService {
 
     // Read operation
     List<Device> getDeviceList();
-    Optional<Device> getDeviceById(Long deviceId);
+    Optional<Device> getDeviceById(int id);
 
     // Update operation
-    Device updateDevice(Device device, Long deviceId);
+    Device updateDevice(Device device, int id);
 
     // Delete operation
-    void deleteDeviceById(Long deviceId);
+    void deleteDeviceById(int id);
 }
 

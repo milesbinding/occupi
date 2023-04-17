@@ -37,46 +37,48 @@ public class DeviceServiceImpl
     }
 
     @Override
-    public Optional<Device> getDeviceById(Long deviceId) {
-        return deviceRepository.findById(deviceId);
+    public Optional<Device> getDeviceById(int id) {
+        return deviceRepository.findById(id);
     }
 
     // Update operation
     @Override
     public Device
     updateDevice(Device device,
-                     Long deviceId)
+                 int id)
     {
         Device deviceDB
-                = deviceRepository.findById(deviceId)
+                = deviceRepository.findById(id)
                 .orElse(null);
 
-        if (Objects.nonNull(device.getDeviceName())
-                && !"".equalsIgnoreCase(
-                device.getDeviceName())) {
+        if (Objects.nonNull(
+                device.getMac())) {
             assert deviceDB != null;
-            deviceDB.setDeviceName(
-                    device.getDeviceName());
+            deviceDB.setMac(
+                    device.getMac());
         }
 
         if (Objects.nonNull(
-                device.getDeviceAddress())) {
+                device.getDistance())) {
             assert deviceDB != null;
-            deviceDB.setDeviceAddress(
-                    device.getDeviceAddress());
+            deviceDB.setDistance(
+                    device.getDistance());
         }
 
-        deviceDB.setDeviceTimestamp(
-                device.getDeviceTimestamp());
+        deviceDB.setTime_stamp(
+                device.getTime_stamp());
+
+        deviceDB.setCounter(
+                device.getCounter());
 
         return deviceRepository.save(deviceDB);
     }
 
     // Delete operation
     @Override
-    public void deleteDeviceById(Long deviceId)
+    public void deleteDeviceById(int id)
     {
-        deviceRepository.deleteById(deviceId);
+        deviceRepository.deleteById(id);
     }
 }
 

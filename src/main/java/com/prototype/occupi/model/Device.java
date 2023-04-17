@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -21,8 +23,9 @@ public class Device {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long deviceId;
-    private String deviceName;
-    private String deviceAddress;
-    private long deviceTimestamp;
+    private int id;
+    private String mac;
+    private LocalDateTime time_stamp;
+    private String distance;
+    private int counter;
 }
