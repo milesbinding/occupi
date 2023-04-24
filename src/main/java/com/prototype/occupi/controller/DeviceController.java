@@ -1,12 +1,13 @@
 // Importing packages modules
-package com.prototype.occupi;
+package com.prototype.occupi.controller;
 
+import com.prototype.occupi.repository.DeviceRepository;
+import com.prototype.occupi.model.Device;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
-import java.util.Optional;
 
 // Annotation
 @RestController
@@ -27,7 +28,6 @@ public class DeviceController {
 
     // Read operation
     @GetMapping("/devices")
-
     public Iterable<Device> getDeviceList()
     {
         return deviceRepository.findAll();
@@ -36,14 +36,13 @@ public class DeviceController {
     public Device getDeviceByMac(@PathVariable("mac")
                                           String mac) {return deviceRepository.findByMac(mac);}
     // Update operation
-    @PutMapping("/devices/{mac}")
-
+    @PatchMapping("/devices/{id}")
     public Device
     updateDevice(@RequestBody Device device,
-                     @PathVariable("mac") String mac)
+                     @PathVariable("id") int id)
     {
         Device deviceDB
-                = deviceRepository.findByMac(mac);
+                = deviceRepository.findById(id).get();
 
         if (Objects.nonNull(
                 device.getMac())) {
@@ -69,12 +68,11 @@ public class DeviceController {
     }
 
     // Delete operation
-    @DeleteMapping("/devices/{mac}")
-
-    public String deleteDeviceByMac(@PathVariable("mac")
-                                       String mac)
+    @DeleteMapping("/devices/{id}")
+    public String deleteDeviceById(@PathVariable("id")
+                                       int id)
     {
-        deviceRepository.deleteByMac(mac);
+        deviceRepository.deleteById(id);
         return "Deleted Successfully";
     }
 }

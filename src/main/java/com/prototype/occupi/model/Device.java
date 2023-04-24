@@ -1,15 +1,14 @@
-package com.prototype.occupi;
+package com.prototype.occupi.model;
 
 // Importing required classes
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "DEVICES")
+@Table(name = "devices")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
