@@ -75,32 +75,34 @@ while True:
         if not device_exists:
             # Insert device into API database
             data = {'mac': bAddr, 'time_stamp': now, 'distance': distance, 'counter': 0}
+            print(str(data))
             headers = {'Content-Type': 'application/json'}
             response = session.post(endpoint, data=json.dumps(data), headers=headers)
             if response.status_code == 200:
                 print("Device added: ", bAddr, "Distance:", distance, "meters")
-        elif device_exists:
+        else:
             print("Device ", bAddr, "is already in the API database! Updating counter & time...")
-            id = device['id']
+            device_id = device['id']
             last_seen = device['time_stamp']
             last_seen_time = datetime.fromisoformat(last_seen)
             counter = device['counter']
             elapsed_time = datetime.fromisoformat(now) - last_seen_time
+            
             counter += 1
-            # Make request to server to update device counter
-            data = {'id': id, 'mac': bAddr, 'distance': distance, 'counter': counter, 'time_stamp': now}
+            # Make request to server to update device counter and time
+            #data = {'id': device_id, 'mac': bAddr, 'distance': distance, 'counter': counter, 'time_stamp': now}
+            data = {'counter': counter, 'time_stamp': now}
             headers = {'Content-Type': 'application/json'}
-            response = requests.put(endpoint, data=json.dumps(data), headers=headers)
+            response = requests.patch(endpoint + f"/{device_id}", data=json.dumps(data), headers=headers)
             if response.status_code == 200:
                 print("Device counter & time updated: ", bAddr, counter)
 
             if elapsed_time.total_seconds() > INTERVAL:
                 # Make request to server to delete device
                 headers = {'Content-Type': 'application/json'}
-                data = {'mac': bAddr}
-                response = requests.delete(endpoint, data=json.dumps(data), headers=headers)
-                if response.status_code == 204:
+                response = requests.delete(endpoint + f"/{device_id}", headers=headers)
+                if response.status_code == 200:
                     print("Device removed: ", bAddr)
 
     print("Sleeping!")
-    time.sleep(10)
+    time.sleep(30)
