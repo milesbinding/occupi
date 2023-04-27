@@ -34,21 +34,28 @@ public class DeviceController {
     }
     @GetMapping("/devices/{mac}")
     public Device getDeviceByMac(@PathVariable("mac")
-                                          String mac) {return deviceRepository.findByMac(mac);}
+                                          String mac) {return deviceRepository.findDeviceByMac(mac);}
     // Update operation
-    @PatchMapping("/devices/{id}")
+    @PatchMapping("/devices/{mac}")
     public Device
     updateDevice(@RequestBody Device device,
-                     @PathVariable("id") int id)
+                     @PathVariable("mac") String mac)
     {
         Device deviceDB
-                = deviceRepository.findById(id).get();
+                = deviceRepository.findDeviceByMac(mac);
 
         if (Objects.nonNull(
                 device.getMac())) {
             assert deviceDB != null;
             deviceDB.setMac(
                     device.getMac());
+        }
+
+        if (Objects.nonNull(
+                device.getName())) {
+            assert deviceDB != null;
+            deviceDB.setName(
+                    device.getName());
         }
 
         if (Objects.nonNull(
@@ -68,11 +75,11 @@ public class DeviceController {
     }
 
     // Delete operation
-    @DeleteMapping("/devices/{id}")
-    public String deleteDeviceById(@PathVariable("id")
-                                       int id)
+    @DeleteMapping("/devices/{mac}")
+    public String deleteDeviceByMac(@PathVariable("mac")
+                                       String mac)
     {
-        deviceRepository.deleteById(id);
+        deviceRepository.deleteDeviceByMac(mac);
         return "Deleted Successfully";
     }
 }

@@ -25,6 +25,8 @@ public class Device {
     private int id;
     @Column(name = "mac")
     private String mac;
+    @Column(name = "name")
+    private String name;
     @Column(name = "time_stamp")
     private LocalDateTime time_stamp;
     @Column(name = "distance")
