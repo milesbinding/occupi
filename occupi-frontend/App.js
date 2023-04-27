@@ -14,7 +14,6 @@ export default class HomeNav extends Component {
             screenOptions={{
               headerShown: false,
               lazy: false,
-              tabBaroptions: { tabBarActiveTintColor: '#97deba' },
             }}
             initialRouteName="Rooms"
           >

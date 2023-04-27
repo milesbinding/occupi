@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Images from '../images/Images';
 import moment from 'moment';
 
@@ -19,7 +19,7 @@ class Rooms extends Component {
 
   componentDidMount() {
     this.handleGetDevices();
-    this.interval = setInterval(() => this.handleGetDevices(), 30000);
+    this.interval = setInterval(() => this.handleGetDevices(), 30000); // seconds
   }
 
   componentWillUnmount() {
@@ -31,7 +31,7 @@ class Rooms extends Component {
       const response = await fetch(`http://localhost:8080/devices`, {
         method: 'GET',
         headers: {
-          'Accept':'application/json'
+          'Accept': 'application/json'
         },
       });
       if (response.status === 200) {
@@ -57,6 +57,26 @@ class Rooms extends Component {
       });
     }
   }
+
+    calculateOccupancy(distance, sightings) {
+    // Define a constant for the maximum distance
+    const max = 100;
+  
+    // Calculate the percentage of occupancy based on the distance and sightings
+    let occupancy = 0;
+    if (distance <= max) {
+      occupancy = ((max - distance) / max) * (sightings / 100) * 100; 
+      
+      // sightings / 10, 20, 50 is the factor that determines how much the percentage is affected.
+    }
+  
+    // Round the occupancy to two decimal places
+    occupancy = Math.round(occupancy * 100) / 100;
+  
+    // Return the occupancy percentage
+    return occupancy;
+  }
+  
 
   render() {
     const { isLoading, devices } = this.state;
@@ -84,14 +104,17 @@ class Rooms extends Component {
       <View style={styles.container}>
         <Image style={styles.image} source={Images.logo} />
         <Text style={styles.text}>Welcome to Room 1. The devices here refresh every 30 seconds.</Text>
-        {devices.map(device => (
-          <View style={styles.box} key={device.mac}>
-            <Text style={styles.name}>{` ${device.mac}`}</Text>
-            <Text style={styles.text}>{device.distance.substr(0, 4) + " meters away."}</Text>
-            <Text style={styles.text}>{"Last seen on " + moment(device.time_stamp).format("DD-MM-YYYY hh:mm A") + "."}</Text>
-            <Text style={styles.text}>{"Seen " + device.counter + " times."}</Text>
-          </View>
-        ))}
+        <ScrollView style={styles.scroll}>
+          {devices.map(device => (
+            <View style={styles.box} key={device.name}>
+              <Text style={styles.name}>{` ${device.name}`}</Text>
+              <Text style={styles.text}>{device.distance.substr(0, 4) + " meters away."}</Text>
+              <Text style={styles.text}>{"Last seen on " + moment(device.time_stamp).format("DD-MM-YYYY hh:mm A") + "."}</Text>
+              <Text style={styles.text}>{"Seen " + device.counter + " times."}</Text>
+              <Text style={styles.text}>{"Estimated occupancy: " + this.calculateOccupancy(device.distance, device.counter) + "% chance."}</Text>
+            </View>
+          ))}
+        </ScrollView>
         <TouchableOpacity onPress={this.handleGetDevices} style={styles.refreshButton}>
           <Text style={styles.refreshButtonText}>Refresh</Text>
         </TouchableOpacity>
@@ -108,12 +131,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   image: {
-    height: 250,
-    width: 250,
-    marginBottom: 10,
+    height: 200,
+    width: 200,
   },
   loadingText: {
     fontSize: 20,
+  },
+  scroll: {
+    flex: 1,
   },
   box: {
     alignItems: 'center',
@@ -141,6 +166,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     alignSelf: 'center',
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   refreshButton: {
     width: '50%',
