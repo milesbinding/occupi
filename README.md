@@ -8,6 +8,7 @@ This project aims to measure the occupancy of a room using a Raspberry Pi, Bluet
 - [Python 3.11](https://www.python.org/downloads/) (preinstalled on Raspberry Pi OS)
 - [Java 17](https://jdk.java.net/archive/)
 - [Node.js](https://nodejs.org/en) (for running the front-end mobile app on a computer).
+- [Expo CLI](https://expo.dev/tools)
 - MySQL 5+ Database
 
 ## Dependencies
@@ -15,7 +16,7 @@ This project aims to measure the occupancy of a room using a Raspberry Pi, Bluet
 
 ## Python Packages
 These packages will need to be installed using `pip install <package name>`. Ensure Python is present on your system's PATH.
-- `bluetooth`, a part of [PyBluez](https://pybluez.readthedocs.io/en/latest/). Install using `pip install pybluez`.
+- `bluetooth`, a part of [PyBluez](https://pybluez.readthedocs.io/en/latest/). Used for accessing Bluetooth system resources. Install using `pip install pybluez`.
 - `requests`, a simple HTTP request library.
 
 The following packages are built-in to Python, and such do not require installation with `pip`.
@@ -33,7 +34,8 @@ The following packages are built-in to Python, and such do not require installat
 2. Install Python 3 and the required packages, ensuring it is in your system `PATH`.
 3. Install JDK 17, and ensure it is in your system `PATH`.
 4. Install Node.js, and open the Node.js command prompt (not the normal terminal) on Windows. For Linux, just use `npm` in your terminal of choice.
-5. Change the working directory to `occupi-frontend` using `cd`, and run `npm install` to install the mobile app environment. It will handle installing all of the dependencies in `node_modules`.
+5. Install Expo CLI using `npm install --global expo-cli`.
+6. Change the working directory to `occupi-frontend` using `cd`, and run `npm install` to install the mobile app environment. It will handle installing all the dependencies in `node_modules`.
 
 ## Usage
 
