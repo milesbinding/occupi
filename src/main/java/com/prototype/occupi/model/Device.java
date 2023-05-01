@@ -27,8 +27,10 @@ public class Device {
     private String mac;
     @Column(name = "name")
     private String name;
-    @Column(name = "time_stamp")
-    private LocalDateTime time_stamp;
+    @Column(name = "first_time_stamp")
+    private LocalDateTime first_time_stamp;
+    @Column(name = "current_time_stamp")
+    private LocalDateTime current_time_stamp;
     @Column(name = "distance")
     private String distance;
     @Column(name = "counter")

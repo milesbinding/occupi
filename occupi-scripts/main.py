@@ -7,9 +7,6 @@ import requests
 import json
 import bluetooth
 
-# Define time interval to check for device presence
-interval = 5 * 60  # 5 minutes in seconds
-
 # Constants for Friis transmission equation
 freq = 2400  # MHz
 tx_power = 0  # dBm
@@ -73,32 +70,23 @@ while True:
 
         if not device_exists:
             # Insert device into API database
-            data = {'name': name, 'mac': bAddr, 'time_stamp': now, 'distance': distance, 'counter': 1}
+            data = {'name': name, 'mac': bAddr, 'first_time_stamp': now, 'current_time_stamp': now,
+                    'distance': distance, 'counter': 1}
             headers = {'Content-Type': 'application/json'}
             response = session.post(endpoint, data=json.dumps(data), headers=headers)
             if response.status_code == 200:
                 print("Device added: ", name, "Distance:", distance, "meters")
         else:
             print("Device ", name, "is already in the API database! Updating counter & time...")
-            last_seen = device['time_stamp']
-            last_seen_time = datetime.fromisoformat(last_seen)
             counter = device['counter']
-            elapsed_time = datetime.fromisoformat(now) - last_seen_time
-
+            first_time_stamp = device['first_time_stamp']
             counter += 1
             # Make request to server to update device counter and time
-            data = {'counter': counter, 'time_stamp': now}
+            data = {'counter': counter, 'current_time_stamp': now, 'first_time_stamp': first_time_stamp}
             headers = {'Content-Type': 'application/json'}
             response = session.patch(endpoint + f"/{device['mac']}", data=json.dumps(data), headers=headers)
             if response.status_code == 200:
                 print("Device counter & time updated: ", name, counter)
-
-            if elapsed_time.total_seconds() > interval:
-                # Make request to server to delete device
-                headers = {'Content-Type': 'application/json'}
-                response = session.delete(endpoint + f"/{device['mac']}", headers=headers)
-                if response.status_code == 200:
-                    print("Device removed: ", name)
 
     print("Sleeping!")
     time.sleep(30)

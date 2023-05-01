@@ -3,6 +3,7 @@ package com.prototype.occupi.controller;
 
 import com.prototype.occupi.repository.DeviceRepository;
 import com.prototype.occupi.model.Device;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.Objects;
 
 // Annotation
 @RestController
+@Transactional
 // Class
 public class DeviceController {
 
@@ -65,8 +67,11 @@ public class DeviceController {
                     device.getDistance());
         }
 
-        deviceDB.setTime_stamp(
-                device.getTime_stamp());
+        deviceDB.setFirst_time_stamp(
+                device.getFirst_time_stamp());
+
+        deviceDB.setCurrent_time_stamp(
+                device.getCurrent_time_stamp());
 
         deviceDB.setCounter(
                 device.getCounter());
