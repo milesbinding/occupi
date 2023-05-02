@@ -70,7 +70,7 @@ class Rooms extends Component {
       this.setState({
         isLoading: false,
         devices: null,
-        error: `Something went wrong. ${error}`,
+        error: `${error}, API is not running.`,
       });
     }
   }
@@ -82,24 +82,24 @@ class Rooms extends Component {
     const hours = duration.asHours();
     const minutes = duration.minutes();
     const seconds = duration.seconds();
-    
+
     let timeString = '';
-    
+
     if (hours >= 1) {
       timeString += `${Math.floor(hours)} hour${hours >= 2 ? 's' : ''}, `;
     }
-    
+
     if (minutes >= 1 && hours < 1) {
       timeString += `${minutes} minute${minutes >= 2 ? 's' : ''}, `;
     }
-    
+
     if (seconds >= 1 && hours < 1 && minutes < 1) {
       timeString += `${seconds} second${seconds >= 2 ? 's' : ''}, `;
     }
-    
+
     // Remove the trailing comma and space
     timeString = timeString.replace(/,\s$/, '');
-    
+
     return timeString;
   }
 
