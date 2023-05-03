@@ -35,11 +35,8 @@ if platform.system() == 'Windows':
 
 # Bluetooth device detection
 while True:
-    if platform.system() == 'Windows':
-        nearby_devices = bluetooth.discover_devices(lookup_names=True)
-    else:
-        service = DiscoveryService()
-        nearby_devices = service.discover(2)
+
+    nearby_devices = bluetooth.discover_devices(lookup_names=True)
 
     print("Discovering devices...")
     for bAddr, name in nearby_devices:

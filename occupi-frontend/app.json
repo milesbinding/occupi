@@ -2,6 +2,7 @@
   "expo": {
     "name": "occupi-frontend",
     "slug": "occupi-frontend",
+    "description": "The front-end React Native app for my Occupi project.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +22,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.milesbinding.occupi"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6b30395b-1f01-4c0e-86ab-c211286f3bfe"
+      }
     }
   }
 }
