@@ -31,7 +31,7 @@ endpoint = config['API']['endpoint']
 session = requests.Session()
 
 if platform.system() == 'Windows':
-    print("The PyBluez library is not compatible with Windows. Using default values for RSSI.")
+    print("The PyBluez BLE library is not compatible with Windows. Using default values for RSSI.")
 
 # Bluetooth device detection
 while True:
@@ -54,9 +54,7 @@ while True:
 
         else:
             # Use the lookup_name and read_rssi functions to retrieve the RSSI value.
-            rssi = bluetooth.read_rssi(bAddr)
-            rssi_dbm = float(rssi)
-            distance = 10 ** ((tx_power - rssi_dbm - rssi_0) / (10 * n))
+            print("Use the Linux script, main_linux.py for RSSI support.")
 
         # Check if device already exists in the API database
         query = f"{endpoint}?mac={bAddr}"
