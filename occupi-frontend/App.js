@@ -12,8 +12,8 @@ export default class HomeNav extends Component {
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={{
-              headerShown: false,
-              lazy: false,
+              headerShown: false, 
+              lazy: false, //set to render on first initial render
             }}
             initialRouteName="Rooms"
           >

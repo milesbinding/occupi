@@ -27,9 +27,17 @@ class Rooms extends Component {
     clearInterval(this.interval);
   }
 
+  /* The handleGetDevices() function is an asynchronous (i.e. execution at the same time as other code)
+   function that makes a GET request to retrieve device data from the API endpoint.
+   If the response is successful (HTTP status 200), it filters the data to include only
+   devices that were seen within the last 5 minutes. It also creates a list of promises
+   to delete devices that were not seen within the last 5 minutes. The function then
+   waits for all the delete promises to resolve using Promise.all() and sets the
+   component state with the filtered devices. If the response is not successful,
+   it sets the component state with an error message, and displays it to the user.*/
   async handleGetDevices() {
     try {
-      const response = await fetch(`http://localhost:8080/devices`, {
+      const response = await fetch(`http://192.168.0.32:8080/devices`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json'
@@ -75,6 +83,9 @@ class Rooms extends Component {
     }
   }
 
+  /* getTimeStampDifference takes in two timestamps and calculates the time difference
+   between them in hours, minutes, and seconds.
+   It returns a formatted string representing the time difference.*/
   getTimestampDifference(startTime, endTime) {
     const moment1 = moment(startTime);
     const moment2 = moment(endTime);
@@ -126,11 +137,17 @@ class Rooms extends Component {
       );
     }
 
+    /*The devices.map() method is used to loop through the devices array
+      and return a new array of elements based on the original array.
+      In this case, for each device object in the devices array, a new View component
+      is returned with various pieces of information about the device,
+      including its name, distance, current_time_stamp, counter, and first_time_stamp.*/
     return (
       <View style={styles.container}>
         <Image style={styles.image} source={Images.logo} />
         <Text style={styles.text}>Welcome to Room 1. The devices here refresh every 30 seconds. There are currently {devices.length} in the room!</Text>
         <ScrollView style={styles.scroll}>
+          
           {devices.map(device => (
             <View style={styles.box} key={device.name}>
               <Text style={styles.name}>{` ${device.name}`}</Text>
