@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import Rooms from './components/Rooms';
 import Settings from './components/Settings';
 
@@ -17,8 +18,24 @@ export default class HomeNav extends Component {
             }}
             initialRouteName="Rooms"
           >
-            <Tab.Screen name="Rooms" component={Rooms} />
-            <Tab.Screen name="Settings" component={Settings} />
+            <Tab.Screen 
+              name="Rooms" 
+              component={Rooms} 
+              options={{
+                tabBarIcon: ({ color, size }) => (
+                  <Icon name="home" color={color} size={size} />
+                ),
+              }}
+            />
+            <Tab.Screen 
+              name="Settings" 
+              component={Settings} 
+              options={{
+                tabBarIcon: ({ color, size }) => (
+                  <Icon name="settings" color={color} size={size} />
+                ),
+              }}
+            />
           </Tab.Navigator>
         </NavigationContainer>
     );
