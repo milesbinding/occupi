@@ -45,7 +45,7 @@ while True:
 
         # Check the operating system and use the appropriate method to retrieve the RSSI value.
         if platform.system() == 'Windows':
-            rssi_dbm = float(50)
+            rssi_dbm = float(50)  # Default RSSI
             distance = 10 ** ((tx_power - rssi_dbm - rssi_0) / (10 * n))
             # Friis Equation
 
@@ -58,6 +58,8 @@ while True:
         response = session.get(query)
         devices = json.loads(response.content)
         device_exists = False
+        if isinstance(devices, str):  # In the case the dictionary of devices is interpreted as an int indices
+            devices = json.loads(devices)
         for device in devices:
             if device['mac'] == bAddr:
                 device_exists = True

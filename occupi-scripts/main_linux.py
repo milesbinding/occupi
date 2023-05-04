@@ -116,6 +116,8 @@ while True:
         response = session.get(query)
         devices = json.loads(response.content)
         device_exists = False
+        if isinstance(devices, str):  # In the case the dictionary of devices is interpreted as an int indices
+            devices = json.loads(devices)
         for device in devices:
             if device['mac'] == bAddr:
                 device_exists = True
