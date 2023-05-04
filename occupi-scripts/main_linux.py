@@ -20,7 +20,7 @@ config = configparser.ConfigParser()
 if os.path.isfile('config.ini'):
     config.read('config.ini')
 else:
-    config['API'] = {'endpoint': 'http://192.168.0.32:8080/devices'}
+    config['API'] = {'endpoint': 'http://yuicasualgrounds.tplinkdns.com:8080/devices'}
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
 

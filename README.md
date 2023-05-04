@@ -41,10 +41,10 @@ The following packages are built-in to Python, and such do not require installat
 
 ## Usage
 
-1. Run the Spring Boot API by running the .jar (`java -jar <app_name>-<app_version>-SNAPSHOT.jar`) release or building the API yourself in an IDE of your choice, using the `pom.xml` file. Running the API in an IDE such as Eclipse or IntelliJ IDEA will allow you to change the database URL and password in `application.properties`, so this method is preferred.
+1. Run the Spring Boot API by running the .jar (`java -jar <app_name>-<app_version>-SNAPSHOT.jar`) release or building the API yourself in an IDE of your choice, using Maven. Running the API in an IDE such as Eclipse or IntelliJ IDEA will allow you to change the database URL and password in `application.properties`, so this method is preferred. I am unable to give you the password to my Mudfoot URL.
 However, note that distance calculation is unavailable in Windows, and in Linux it requires you to pair with the device through the GUI.
-2. Run the Python script `main.py`, and change the API URL in the `config.ini` file generated. For example, `http://localhost:8080/devices` or `http://192.168.0.XX/devices`. The computer or Raspberry Pi will start collecting occupancy data. You can use Thonny (comes preinstalled on Raspberry Pi OS), any Python IDE of your choice on a Windows system, or just run the script in a terminal by using `python main.py`.
-3. Start the React Native app by entering `$env:NODE_OPTIONS = "--openssl-legacy-provider"` and `npx expo start --web` into the Node.js terminal. Open your browser and  navigate to `http://localhost:19006` to view the app. Or, just use the provided APK on your Android Device.
+2. Run the Python script `main.py`, and change the API URL in the `config.ini` file generated. For example, `http://localhost:8080/devices` or `http://192.168.0.XX/devices`. By default, this is set to localhost. I am also hosting the API at `http://yuicasualgrounds.tplinkdns.com:8080/devices`. The computer or Raspberry Pi will start collecting occupancy data. You can use Thonny (comes preinstalled on Raspberry Pi OS), any Python IDE of your choice on a Windows system, or just run the script in a terminal by using `python main.py`.
+3. Start the React Native app by entering `$env:NODE_OPTIONS = "--openssl-legacy-provider"` and `npx expo start --web` into the Node.js terminal. Open your browser and  navigate to `http://localhost:19006` to view the app. Or, just use the provided APK on your Android Device. 
 
 ## Acknowledgments
 

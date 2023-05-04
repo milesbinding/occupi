@@ -37,7 +37,7 @@ class Rooms extends Component {
    it sets the component state with an error message, and displays it to the user.*/
   async handleGetDevices() {
     try {
-      const response = await fetch(`http://192.168.0.32:8080/devices`, {
+      const response = await fetch(`http://localhost:8080/devices`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json'
